@@ -11,6 +11,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import kotlin.time.Duration
 
 @HiltViewModel
 class ListOfAlarmsViewModel(
@@ -24,6 +27,8 @@ class ListOfAlarmsViewModel(
     val alarmEvent = alarmEventChannel.receiveAsFlow()
 
     private var recentlyDeleted: Alarm? = null
+
+    var nearestAlarmAt: Int? = null
 
     init {
         getAlarms()
@@ -45,9 +50,30 @@ class ListOfAlarmsViewModel(
                     recentlyDeleted = event.alarm
                 }
             }
+            is AlarmEvent.OnRestoreAlarmClick -> {
+                viewModelScope.launch {
+                    alarmRepository.insertAlarm(recentlyDeleted ?: return@launch)
+                    recentlyDeleted = null
+                }
+            }
             is AlarmEvent.OnAddAlarmClick -> {
                 //TODO
             }
+        }
+    }
+
+    fun getNearestTime() {
+        viewModelScope.launch {
+            state.alarms.minByOrNull {
+                it.ringsTime
+            }
+            val ringsTime = state.alarms.sortedWith(compareBy { it.ringsTime }).first()
+            val nowTime = DateTimeFormatter.ISO_DATE_TIME
+            val currentTime =
+                LocalDateTime.now().format(
+                    DateTimeFormatter.ISO_DATE_TIME
+                )//ofPattern("dd.MM.yyyy HH:mm")
+            //java.time.Duration.between(currentTime!!.toInstant(), ringsTime).toDays()
         }
     }
 
