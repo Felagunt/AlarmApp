@@ -56,6 +56,9 @@ class ListOfAlarmsViewModel(
                     recentlyDeleted = null
                 }
             }
+            is AlarmEvent.OnEnableClick -> {
+                event.alarm.isEnabled = event.alarm.isEnabled
+            }
             is AlarmEvent.OnAddAlarmClick -> {
                 //TODO
             }

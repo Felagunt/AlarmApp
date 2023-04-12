@@ -4,12 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.BoxScopeInstance.align
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
@@ -26,7 +22,8 @@ fun AlarmListItem(
     alarm: Alarm,
     modifier: Modifier = Modifier,
     OnItemClick: (Alarm) -> Unit,
-    OnDeleteAlarmClick: () -> Unit
+    OnDeleteAlarmClick: () -> Unit,
+    isEnabled: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -52,6 +49,7 @@ fun AlarmListItem(
                 style = MaterialTheme.typography.h4,
                 color = MaterialTheme.colors.secondary
             )
+            Checkbox(checked = false, onCheckedChange ={ isEnabled()})
             IconButton(onClick = OnDeleteAlarmClick) {
                 Icon(
                     imageVector = Icons.Default.Delete,

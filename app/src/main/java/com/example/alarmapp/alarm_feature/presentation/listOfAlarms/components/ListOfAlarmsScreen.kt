@@ -30,10 +30,11 @@ fun LisOfAlarmsScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                //TODO navigate
-            },
-            backgroundColor = MaterialTheme.colors.primary
+            FloatingActionButton(
+                onClick = {
+                    //TODO navigate
+                },
+                backgroundColor = MaterialTheme.colors.primary
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -60,11 +61,16 @@ fun LisOfAlarmsScreen(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                items(state.alarms) {alarm ->
+                items(state.alarms) { alarm ->
                     AlarmListItem(
                         alarm = alarm,
                         OnItemClick = {
                             //TODO navigate
+                        },
+                        isEnabled = {
+                            alarmsViewModel.onEvent(
+                                AlarmEvent.OnEnableClick(alarm)
+                            )
                         },
                         OnDeleteAlarmClick = {
                             alarmsViewModel.onEvent(
@@ -75,7 +81,7 @@ fun LisOfAlarmsScreen(
                                     message = "Alarm deleted",
                                     actionLabel = "Undo"
                                 )
-                                if(result == SnackbarResult.ActionPerformed) {
+                                if (result == SnackbarResult.ActionPerformed) {
                                     alarmsViewModel.onEvent(AlarmEvent.OnRestoreAlarmClick)
                                 }
                             }

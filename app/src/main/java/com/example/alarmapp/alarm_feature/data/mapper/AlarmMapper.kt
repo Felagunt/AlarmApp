@@ -8,6 +8,7 @@ fun AlarmEntity.toAlarm(): Alarm {
         ringsTime = ringsTime,
         alarmId = alarmId,
         isVibration = isVibration,
-        ringMelody = ringMelody
+        ringMelody = ringMelody,
+        isEnabled = isEnabled
     )
 }

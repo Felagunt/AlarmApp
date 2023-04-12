@@ -8,5 +8,6 @@ sealed class AlarmEvent {
 
     object OnRestoreAlarmClick: AlarmEvent()
     object OnAddAlarmClick: AlarmEvent()
+    data class OnEnableClick(val alarm: Alarm): AlarmEvent()
     data class OnAlarmClick(val alarm: Alarm): AlarmEvent()
 }
