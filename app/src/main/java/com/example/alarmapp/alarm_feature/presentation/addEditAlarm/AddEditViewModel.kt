@@ -55,9 +55,14 @@ class AddEditViewModel(
                     ringsTime = event.ringTime
                 )
             }
+            is AddEditEvent.OnCheckedEnabled -> {
+                state.alarm = state.alarm?.copy(
+                    isEnabled = event.isEnabled
+                )
+            }
             is AddEditEvent.OnCheckedVibration -> {
                 state.alarm = state.alarm?.copy(
-                    isVibration = event.isEnabled
+                    isVibration = event.isVibrating
                 )
             }
             is AddEditEvent.SaveAlarm -> {

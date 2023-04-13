@@ -95,27 +95,14 @@ fun AddEditAlarmScreen(
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(50.dp)
-                            .shadow(15.dp, CircleShape)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colors.onSecondary)
-                            .border(
-                                width = 3.dp,
-                                color = MaterialTheme.colors.secondaryVariant,
-                                shape = CircleShape
-                            )
-                    ) {
-                        Text(
-                            "Vibration: ",
-                            style = MaterialTheme.typography.h4
-                        )
-                        Checkbox(
-                            checked = alarm.isVibration,
-                            onCheckedChange =
-                        )
-                    }
+                    CheckBoxComponent(
+                        alarm = alarm,
+                        textLabel = "Vibration: ",
+                        checked = alarm.isVibration,
+                        onCheckChange = {
+                            addEditViewModel.onEvent(AddEditEvent.OnCheckedEnabled(alarm.isVibration))
+                        }
+                    )
                 }
                 Row(
                     modifier = Modifier
@@ -141,7 +128,17 @@ fun AddEditAlarmScreen(
                         )
                         Checkbox(
                             checked = alarm.isEnabled,
-                            onCheckedChange =
+                            onCheckedChange = {
+                                state.alarm?.isVibration?.let { it1 ->
+                                    AddEditEvent.OnCheckedEnabled(
+                                        it1
+                                    )
+                                }?.let { it2 ->
+                                    addEditViewModel.onEvent(
+                                        it2
+                                    )
+                                }
+                            }
                         )
                     }
                 }
@@ -172,3 +169,5 @@ fun AddEditAlarmScreen(
                 }
             }
         }
+    }
+}

@@ -7,5 +7,5 @@ data class Alarm(
     val ringsTime: String,
     val isVibration: Boolean = false,
     val ringMelody: String,
-    var isEnabled: Boolean = false
+    var isEnabled: Boolean = true
 )
