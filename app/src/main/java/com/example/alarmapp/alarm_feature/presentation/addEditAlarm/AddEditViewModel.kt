@@ -67,15 +67,19 @@ class AddEditViewModel(
                     )
                 viewModelScope.launch {
                     try {
-                        alarmRepository.insertAlarm(
+                        state.alarm?.let {
                             Alarm(
-                                ringsTime = state.alarm.ringsTime,
-                                isVibration = state.alarm.isVibration,
-                                isEnabled = state.alarm.isEnabled,
-                                ringMelody = state.alarm.ringMelody,
-                                alarmId = state.alarm.alarmId
+                                ringsTime = it.ringsTime,
+                                isVibration = it.isVibration,
+                                isEnabled = it.isEnabled,
+                                ringMelody = it.ringMelody,
+                                alarmId = it.alarmId
                             )
-                        )
+                        }?.let {
+                            alarmRepository.insertAlarm(
+                                it
+                            )
+                        }
                         _eventFlow.trySend(UiEvent.SaveAlarm)
                     } catch (e: Exception){
                      _eventFlow.trySend(
