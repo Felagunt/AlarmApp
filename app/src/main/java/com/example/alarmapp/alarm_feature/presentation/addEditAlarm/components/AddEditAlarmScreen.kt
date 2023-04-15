@@ -18,6 +18,7 @@ import com.example.alarmapp.alarm_feature.presentation.UiEvent
 import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.AddEditEvent
 import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.AddEditViewModel
 import kotlinx.coroutines.flow.collectLatest
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "RememberReturnType")
@@ -26,6 +27,13 @@ fun AddEditAlarmScreen(
     addEditViewModel: AddEditViewModel
 ) {
     val state = addEditViewModel.state
+
+    var hours by remember {
+        mutableStateOf(LocalDateTime.now().hour)
+    }
+    val minutes by remember {
+        mutableStateOf(LocalDateTime.now().minute)
+    }
 
     val scaffoldState = rememberScaffoldState()
 
@@ -85,9 +93,21 @@ fun AddEditAlarmScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-
+                    Column() {
+                        CounterComponent(count = hours, style = MaterialTheme.typography.h3)
+                        Button(onClick ={hours ++ } ) {
+                            Text(text = "Increase +1")
+                        }
+                    }
+                    Text(text = ":", style = MaterialTheme.typography.h3)
+                    Column() {
+                        CounterComponent(count = minutes, style = MaterialTheme.typography.h3)
+                        Button(onClick = {minutes + 10}) {
+                            Text(text = "Increase +10")
+                        }
+                    }
                 }
                 Row(
                     modifier = Modifier
