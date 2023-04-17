@@ -149,15 +149,7 @@ fun AddEditAlarmScreen(
                         Checkbox(
                             checked = alarm.isEnabled,
                             onCheckedChange = {
-                                state.alarm?.isVibration?.let { it1 ->
-                                    AddEditEvent.OnCheckedEnabled(
-                                        it1
-                                    )
-                                }?.let { it2 ->
-                                    addEditViewModel.onEvent(
-                                        it2
-                                    )
-                                }
+                                addEditViewModel.onEvent(AddEditEvent.OnCheckedEnabled(alarm.isEnabled))
                             }
                         )
                     }
