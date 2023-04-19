@@ -8,5 +8,8 @@ sealed class AddEditEvent {
 
     data class OnCheckedEnabled(val isEnabled: Boolean): AddEditEvent()
     data class OnChangeMelody(val alarm: Alarm): AddEditEvent()
+
+    data class OnChangeHours(val hours: Int): AddEditEvent()
+    data class OnChangeMinutes(val minutes: Int): AddEditEvent()
     object SaveAlarm: AddEditEvent()
 }

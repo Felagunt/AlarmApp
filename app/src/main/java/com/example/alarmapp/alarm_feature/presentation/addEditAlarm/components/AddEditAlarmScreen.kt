@@ -95,16 +95,32 @@ fun AddEditAlarmScreen(
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Column() {
+                    Column(modifier = Modifier) {
                         CounterComponent(count = hours, style = MaterialTheme.typography.h3)
-                        Button(onClick ={hours ++ } ) {
+                        Button(onClick ={
+                            hours ++
+                            addEditViewModel.onEvent(
+                                AddEditEvent.OnChangeHours(
+                                    hours = hours
+                                )
+                            )
+                        }
+                        ) {
                             Text(text = "Increase +1")
                         }
                     }
                     Text(text = ":", style = MaterialTheme.typography.h3)
-                    Column() {
+                    Column(modifier = Modifier) {
                         CounterComponent(count = minutes, style = MaterialTheme.typography.h3)
-                        Button(onClick = {minutes + 10}) {
+                        Button(onClick = {
+                            minutes + 10
+                            addEditViewModel.onEvent(
+                                AddEditEvent.OnChangeMinutes(
+                                    minutes = minutes
+                                )
+                            )
+                        }
+                        ) {
                             Text(text = "Increase +10")
                         }
                     }
