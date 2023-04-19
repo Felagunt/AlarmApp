@@ -13,7 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
+import java.time.*
 import java.time.format.DateTimeFormatter
 
 @HiltViewModel
@@ -50,9 +50,21 @@ class AddEditViewModel(
             is AddEditEvent.OnChangeMelody -> {
 
             }
+            is AddEditEvent.OnChangeHours -> {
+                setTime(
+                    hours = event.hours,
+                    minutes = null
+                )
+            }
+            is AddEditEvent.OnChangeMinutes -> {
+                setTime(
+                    hours = null,
+                    minutes = event.minutes
+                )
+            }
             is AddEditEvent.OnChangeTime -> {
                 state.alarm = state.alarm?.copy(
-                    ringsTime = event.ringTime
+                    //ringsTime = event.ringTime
                 )
             }
             is AddEditEvent.OnCheckedEnabled -> {
@@ -96,6 +108,31 @@ class AddEditViewModel(
                 }
             }
         }
+    }
+    private fun setTime(hours: Int?, minutes: Int?) {
+        lateinit var zdt: ZonedDateTime
+        val targetLocaltime =
+            if (minutes != null && hours != null) {
+                LocalTime.of(hours, minutes)
+            } else {
+                LocalTime.now().plusMinutes(10)
+            }
+
+        val z = ZoneId.systemDefault()
+        val now = ZonedDateTime.now(z)
+        val runToday = now.toLocalTime().isBefore(targetLocaltime)
+
+        zdt = if (runToday){
+            now.with(targetLocaltime)
+        }
+        else{
+            now.toLocalDate().plusDays(1).atStartOfDay(z).with(targetLocaltime)
+        }
+
+        state.alarm = state.alarm?.copy(
+            ringsTime = zdt
+        )
+
     }
 
 }

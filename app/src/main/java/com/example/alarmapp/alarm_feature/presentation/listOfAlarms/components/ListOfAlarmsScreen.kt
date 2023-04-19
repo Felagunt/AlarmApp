@@ -7,8 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,6 +26,11 @@ fun LisOfAlarmsScreen(
     val state = alarmsViewModel.state
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+    val nextAlarmTime by remember {
+        mutableStateOf(
+            alarmsViewModel.nextAlarmTime
+        )
+    }
 
     Scaffold(
         floatingActionButton = {
@@ -54,7 +58,7 @@ fun LisOfAlarmsScreen(
                     .fillMaxWidth(),
                 elevation = 32.dp
             ) {
-                Text(text = "Time until wakeup : ${alarmsViewModel.nearestAlarmAt}")
+                Text(text = "Time until wakeup : $nextAlarmTime")
             }
             Spacer(modifier = Modifier.height(8.dp))
             LazyColumn(
