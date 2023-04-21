@@ -45,7 +45,7 @@ fun AlarmListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = alarm.ringsTime,
+                text = alarm.ringsTime.toString(),
                 style = MaterialTheme.typography.h4,
                 color = MaterialTheme.colors.secondary
             )

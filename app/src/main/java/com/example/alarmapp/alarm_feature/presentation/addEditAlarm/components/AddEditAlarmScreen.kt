@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.alarmapp.alarm_feature.presentation.UiEvent
 import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.AddEditEvent
 import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.AddEditViewModel
@@ -24,6 +25,7 @@ import java.time.LocalDateTime
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "RememberReturnType")
 @Composable
 fun AddEditAlarmScreen(
+    navController: NavController,
     addEditViewModel: AddEditViewModel
 ) {
     val state = addEditViewModel.state
