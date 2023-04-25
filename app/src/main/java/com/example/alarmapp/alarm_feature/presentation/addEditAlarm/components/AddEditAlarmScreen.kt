@@ -14,10 +14,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.alarmapp.alarm_feature.presentation.UiEvent
+import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.AddEditAlarmState
 import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.AddEditEvent
-import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.AddEditViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDateTime
 
@@ -25,10 +25,14 @@ import java.time.LocalDateTime
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "RememberReturnType")
 @Composable
 fun AddEditAlarmScreen(
-    navController: NavController,
-    addEditViewModel: AddEditViewModel
+    //navController: NavController,
+    //addEditViewModel: AddEditViewModel,
+    state: AddEditAlarmState,
+    alarmEvent: Flow<UiEvent>,
+    onEvent: (AddEditEvent) -> Unit,
+    navigate: () -> Unit
 ) {
-    val state = addEditViewModel.state
+    //val state = addEditViewModel.state
 
     var hours by remember {
         mutableStateOf(LocalDateTime.now().hour)
@@ -54,7 +58,7 @@ fun AddEditAlarmScreen(
         )
     }
     LaunchedEffect(key1 = true) {
-        addEditViewModel.alarmEvent.collectLatest { event ->
+        alarmEvent.collectLatest { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
@@ -64,6 +68,9 @@ fun AddEditAlarmScreen(
                 is UiEvent.SaveAlarm -> {
                     //TODO navigate
                 }
+                is UiEvent.Navigate -> {
+                    navigate()
+                }
             }
         }
     }
@@ -72,7 +79,7 @@ fun AddEditAlarmScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    addEditViewModel.onEvent(AddEditEvent.SaveAlarm)
+                    onEvent(AddEditEvent.SaveAlarm)
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -101,7 +108,7 @@ fun AddEditAlarmScreen(
                         CounterComponent(count = hours, style = MaterialTheme.typography.h3)
                         Button(onClick ={
                             hours ++
-                            addEditViewModel.onEvent(
+                            onEvent(
                                 AddEditEvent.OnChangeHours(
                                     hours = hours
                                 )
@@ -116,7 +123,7 @@ fun AddEditAlarmScreen(
                         CounterComponent(count = minutes, style = MaterialTheme.typography.h3)
                         Button(onClick = {
                             minutes + 10
-                            addEditViewModel.onEvent(
+                            onEvent(
                                 AddEditEvent.OnChangeMinutes(
                                     minutes = minutes
                                 )
@@ -138,7 +145,7 @@ fun AddEditAlarmScreen(
                         textLabel = "Vibration: ",
                         checked = alarm.isVibration,
                         onCheckChange = {
-                            addEditViewModel.onEvent(AddEditEvent.OnCheckedEnabled(alarm.isVibration))
+                            onEvent(AddEditEvent.OnCheckedEnabled(alarm.isVibration))
                         }
                     )
                 }
@@ -167,7 +174,7 @@ fun AddEditAlarmScreen(
                         Checkbox(
                             checked = alarm.isEnabled,
                             onCheckedChange = {
-                                addEditViewModel.onEvent(AddEditEvent.OnCheckedEnabled(alarm.isEnabled))
+                                onEvent(AddEditEvent.OnCheckedEnabled(alarm.isEnabled))
                             }
                         )
                     }

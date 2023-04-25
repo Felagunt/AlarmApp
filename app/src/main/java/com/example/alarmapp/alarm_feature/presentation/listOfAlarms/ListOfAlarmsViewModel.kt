@@ -8,8 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.alarmapp.alarm_feature.domain.model.Alarm
 import com.example.alarmapp.alarm_feature.domain.repository.AlarmRepository
+import com.example.alarmapp.alarm_feature.presentation.UiEvent
+import com.example.alarmapp.core.presentation.ScreenRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -27,6 +31,9 @@ class ListOfAlarmsViewModel(
 
     private val alarmEventChannel = Channel<AlarmEvent>()
     val alarmEvent = alarmEventChannel.receiveAsFlow()
+
+    private val _uiEvent: MutableSharedFlow<UiEvent> = MutableSharedFlow()
+    val uiEvent = _uiEvent.asSharedFlow()
 
     private var recentlyDeleted: Alarm? = null
 
@@ -48,6 +55,11 @@ class ListOfAlarmsViewModel(
                 viewModelScope.launch {
                     event.alarm.alarmId?.let {
                         val result = alarmRepository.getAlarmById(it)
+                        _uiEvent.emit(
+                            UiEvent.Navigate(
+                                ScreenRoutes.AddEditAlarmScreen.route + "${result?.alarmId}"
+                            )
+                        )
                     }
                 }
             }
@@ -68,6 +80,13 @@ class ListOfAlarmsViewModel(
             }
             is AlarmEvent.OnAddAlarmClick -> {
                 //TODO
+                viewModelScope.launch {
+                    _uiEvent.emit(
+                        UiEvent.Navigate(
+                            ScreenRoutes.AddEditAlarmScreen.route
+                        )
+                    )
+                }
             }
         }
     }

@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.alarmapp.alarm_feature.domain.model.Alarm
 import com.example.alarmapp.alarm_feature.domain.repository.AlarmRepository
 import com.example.alarmapp.alarm_feature.presentation.UiEvent
+import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.AlarmEvent
+import com.example.alarmapp.core.presentation.ScreenRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -28,6 +30,9 @@ class AddEditViewModel(
     private val _eventFlow = Channel<UiEvent>()
     val alarmEvent = _eventFlow.receiveAsFlow()
 
+    private val alarmEventChannel = Channel<AddEditEvent>()
+    val addEditEvent = alarmEventChannel.receiveAsFlow()
+
     private var currentAlarmId: Int? = null
 
     init {
@@ -46,7 +51,7 @@ class AddEditViewModel(
     }
 
     fun onEvent(event: AddEditEvent) {
-        when(event) {
+        when (event) {
             is AddEditEvent.OnChangeMelody -> {
 
             }
@@ -97,18 +102,28 @@ class AddEditViewModel(
                                 it
                             )
                         }
-                        _eventFlow.trySend(UiEvent.SaveAlarm)
-                    } catch (e: Exception){
-                     _eventFlow.trySend(
-                         UiEvent.ShowSnackbar(
-                             message = e.message ?: "Error save"
-                         )
-                     )
+                        _eventFlow.send(UiEvent.SaveAlarm)
+                        _eventFlow.send(
+                            UiEvent.Navigate(
+                                _eventFlow.send(
+                                    UiEvent.Navigate(
+                                        ScreenRoutes.ListOfAlarmsScreen.route
+                                    )
+                                ).toString()
+                            )
+                        )
+                    } catch (e: Exception) {
+                        _eventFlow.send(
+                            UiEvent.ShowSnackbar(
+                                message = e.message ?: "Error save"
+                            )
+                        )
                     }
                 }
             }
         }
     }
+
     private fun setTime(hours: Int?, minutes: Int?) {
         lateinit var zdt: ZonedDateTime
         val targetLocaltime =
@@ -122,10 +137,9 @@ class AddEditViewModel(
         val now = ZonedDateTime.now(z)
         val runToday = now.toLocalTime().isBefore(targetLocaltime)
 
-        zdt = if (runToday){
+        zdt = if (runToday) {
             now.with(targetLocaltime)
-        }
-        else{
+        } else {
             now.toLocalDate().plusDays(1).atStartOfDay(z).with(targetLocaltime)
         }
 

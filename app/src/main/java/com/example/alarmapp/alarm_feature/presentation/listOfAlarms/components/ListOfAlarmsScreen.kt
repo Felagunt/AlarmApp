@@ -9,37 +9,60 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
+import com.example.alarmapp.alarm_feature.domain.model.Alarm
 import com.example.alarmapp.alarm_feature.presentation.UiEvent
 import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.AlarmEvent
-import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.ListOfAlarmsViewModel
+import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.AlarmsState
 import com.example.alarmapp.core.presentation.ScreenRoutes
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun LisOfAlarmsScreen(
-    navController: NavController,
-    alarmsViewModel: ListOfAlarmsViewModel = hiltViewModel()
+    //navController: NavController,
+    //alarmsViewModel: ListOfAlarmsViewModel = hiltViewModel()
+    state: AlarmsState,
+    nextAlarmTime: LocalDateTime? = null,
+    //nextAlarmTime:
+    uiEvent: SharedFlow<UiEvent>,
+    onEvent: (AlarmEvent) -> Unit,
+    navigate: () -> Unit
 ) {
 
-    val state = alarmsViewModel.state
+    //val state = alarmsViewModel.state
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
-    val nextAlarmTime by remember {
-        mutableStateOf(
-            alarmsViewModel.nextAlarmTime
-        )
+
+//    val nextAlarmTime by remember {
+//        mutableStateOf(
+//            alarmsViewModel.nextAlarmTime
+//        )
+//    }
+
+    LaunchedEffect(key1 = true) {
+        uiEvent.collectLatest {
+            when(it) {
+                is UiEvent.Navigate -> {
+                    navigate()
+                }
+
+                else -> {}
+            }
+        }
     }
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(ScreenRoutes.AddEditAlarmScreen.route)
+                    navigate()
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -72,17 +95,15 @@ fun LisOfAlarmsScreen(
                     AlarmListItem(
                         alarm = alarm,
                         OnItemClick = {
-                            navController.navigate(
-                                ScreenRoutes.AddEditAlarmScreen.route + "/${alarm.alarmId}"
-                            )
+                            navigate()
                         },
                         isEnabled = {
-                            alarmsViewModel.onEvent(
+                            onEvent(
                                 AlarmEvent.OnEnableClick(alarm)
                             )
                         },
                         OnDeleteAlarmClick = {
-                            alarmsViewModel.onEvent(
+                            onEvent(
                                 AlarmEvent.OnDeleteAlarmClick(alarm)
                             )
                             scope.launch {
@@ -91,7 +112,7 @@ fun LisOfAlarmsScreen(
                                     actionLabel = "Undo"
                                 )
                                 if (result == SnackbarResult.ActionPerformed) {
-                                    alarmsViewModel.onEvent(AlarmEvent.OnRestoreAlarmClick)
+                                    onEvent(AlarmEvent.OnRestoreAlarmClick)
                                 }
                             }
                         }
@@ -99,5 +120,27 @@ fun LisOfAlarmsScreen(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ListOfAlarmsScreenPreview() {
+    LisOfAlarmsScreen(
+        state = AlarmsState(
+            alarms = listOf(
+                Alarm(
+                    alarmId = null,
+                    ringsTime = ZonedDateTime.now().plusMinutes(40),
+                    isEnabled = true,
+                    isVibration = false,
+                    ringMelody = 2.toString()
+                )
+            )
+        ),
+        onEvent = {},
+        uiEvent = emptyFlow<UiEvent>() as SharedFlow<UiEvent>
+    ) {
+        ScreenRoutes.AddEditAlarmScreen.route
     }
 }
