@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.alarmapp.alarm_feature.domain.model.Alarm
 import com.example.alarmapp.alarm_feature.domain.repository.AlarmRepository
 import com.example.alarmapp.alarm_feature.presentation.UiEvent
-import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.AlarmEvent
 import com.example.alarmapp.core.presentation.ScreenRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -17,9 +16,10 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.*
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 @HiltViewModel
-class AddEditViewModel(
+class AddEditViewModel @Inject constructor(
     private val alarmRepository: AlarmRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -144,7 +144,7 @@ class AddEditViewModel(
         }
 
         state.alarm = state.alarm?.copy(
-            ringsTime = zdt
+            ringsTime = zdt.toEpochSecond()
         )
 
     }

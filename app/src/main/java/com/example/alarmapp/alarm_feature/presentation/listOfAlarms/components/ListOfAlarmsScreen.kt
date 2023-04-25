@@ -1,6 +1,5 @@
 package com.example.alarmapp.alarm_feature.presentation.listOfAlarms.components
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,7 +22,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+
 @Composable
 fun LisOfAlarmsScreen(
     //navController: NavController,
@@ -77,7 +76,7 @@ fun LisOfAlarmsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(paddingValues = it)
         ) {
             TopAppBar(
                 modifier = Modifier

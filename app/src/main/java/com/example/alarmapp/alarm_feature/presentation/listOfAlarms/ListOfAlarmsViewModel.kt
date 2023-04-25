@@ -16,13 +16,16 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 import kotlin.time.Duration
 
 @HiltViewModel
-class ListOfAlarmsViewModel(
+class ListOfAlarmsViewModel @Inject constructor(
     private val alarmRepository: AlarmRepository
 ) : ViewModel() {
 
@@ -95,11 +98,13 @@ class ListOfAlarmsViewModel(
 
         val alarm = state.alarms.sortedWith(compareBy { it.ringsTime }).first()
         val ringsTime = alarm.ringsTime
+        val ringTimeZdt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(ringsTime),
+        ZoneId.systemDefault())
         val currentTime = LocalDateTime.now().atZone(ZoneId.systemDefault())
         val nextAlarm = LocalDateTime.now()
         val eta = java.time.Duration.between(
             currentTime.toInstant(),
-            ringsTime.toInstant()
+            ringTimeZdt
         ).toMinutes()
         if (eta > 60) {
             val hours = eta / 60

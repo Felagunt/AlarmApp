@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterialApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "RememberReturnType")
 @Composable
 fun AddEditAlarmScreen(
     //navController: NavController,
@@ -95,7 +94,7 @@ fun AddEditAlarmScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.onSurface)
-                .padding(16.dp)
+                .padding(paddingValues = it)
         ) {
             state.alarm?.let { alarm ->
                 Row(
@@ -107,7 +106,7 @@ fun AddEditAlarmScreen(
                     Column(modifier = Modifier) {
                         CounterComponent(count = hours, style = MaterialTheme.typography.h3)
                         Button(onClick ={
-                            hours ++
+                            //hours ++
                             onEvent(
                                 AddEditEvent.OnChangeHours(
                                     hours = hours
@@ -122,7 +121,7 @@ fun AddEditAlarmScreen(
                     Column(modifier = Modifier) {
                         CounterComponent(count = minutes, style = MaterialTheme.typography.h3)
                         Button(onClick = {
-                            minutes + 10
+                            //minutes + 10
                             onEvent(
                                 AddEditEvent.OnChangeMinutes(
                                     minutes = minutes
