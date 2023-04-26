@@ -11,7 +11,7 @@ import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.AddEditViewM
 import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.components.AddEditAlarmScreen
 import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.ListOfAlarmsViewModel
 import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.components.LisOfAlarmsScreen
-import kotlinx.coroutines.flow.collectLatest
+
 
 @Composable
 fun Navigation() {
@@ -32,7 +32,7 @@ fun Navigation() {
                 onEvent = viewModel::onEvent,
                 uiEvent = viewModel.uiEvent,
             ) {
-                navController.navigate(ScreenRoutes.AddEditAlarmScreen.route)
+                navController.navigate(ScreenRoutes.ListOfAlarmsScreen.route)
             }
         }
         composable(

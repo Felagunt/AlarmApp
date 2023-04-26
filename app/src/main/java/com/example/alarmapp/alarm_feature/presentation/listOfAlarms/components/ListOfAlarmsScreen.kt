@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
-import java.time.ZonedDateTime
 
 
 @Composable
@@ -140,6 +139,6 @@ fun ListOfAlarmsScreenPreview() {
         onEvent = {},
         uiEvent = emptyFlow<UiEvent>() as SharedFlow<UiEvent>
     ) {
-        ScreenRoutes.AddEditAlarmScreen.route
+        ScreenRoutes.ListOfAlarmsScreen.route
     }
 }
