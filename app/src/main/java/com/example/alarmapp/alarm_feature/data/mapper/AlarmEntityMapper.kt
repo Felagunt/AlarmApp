@@ -6,7 +6,7 @@ import com.example.alarmapp.alarm_feature.domain.model.Alarm
 fun Alarm.toAlarmEntity(): AlarmEntity {
     return AlarmEntity(
         alarmId = alarmId,
-        ringsTime = ringsTime,
+        ringsTime = ringsTime.toEpochSecond(),
         isVibration = isVibration,
         ringMelody = ringMelody,
         isEnabled = isEnabled
