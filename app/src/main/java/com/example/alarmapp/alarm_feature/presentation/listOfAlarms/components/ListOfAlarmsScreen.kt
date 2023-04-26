@@ -130,7 +130,7 @@ fun ListOfAlarmsScreenPreview() {
             alarms = listOf(
                 Alarm(
                     alarmId = null,
-                    ringsTime = ZonedDateTime.now().plusMinutes(40),
+                    ringsTime = 20000,
                     isEnabled = true,
                     isVibration = false,
                     ringMelody = 2.toString()
