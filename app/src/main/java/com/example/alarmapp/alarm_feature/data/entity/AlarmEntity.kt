@@ -7,7 +7,7 @@ import java.time.ZonedDateTime
 @Entity
 data class AlarmEntity(
     @PrimaryKey val alarmId: Int? = null,
-    val ringsTime: ZonedDateTime,
+    val ringsTime: Long,
     val isVibration: Boolean = false,
     val ringMelody: String,
     var isEnabled: Boolean = false

@@ -15,10 +15,11 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 import kotlin.time.Duration
 
 @HiltViewModel
-class ListOfAlarmsViewModel(
+class ListOfAlarmsViewModel @Inject constructor(
     private val alarmRepository: AlarmRepository
 ) : ViewModel() {
 

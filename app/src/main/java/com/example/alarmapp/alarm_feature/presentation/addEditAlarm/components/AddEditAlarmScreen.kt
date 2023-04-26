@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.alarmapp.alarm_feature.presentation.UiEvent
 import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.AddEditEvent
@@ -26,7 +27,7 @@ import java.time.LocalDateTime
 @Composable
 fun AddEditAlarmScreen(
     navController: NavController,
-    addEditViewModel: AddEditViewModel
+    addEditViewModel: AddEditViewModel = hiltViewModel()
 ) {
     val state = addEditViewModel.state
 

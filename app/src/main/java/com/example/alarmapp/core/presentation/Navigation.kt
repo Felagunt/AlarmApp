@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.components.AddEditAlarmScreen
 import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.components.LisOfAlarmsScreen
 
 @Composable
@@ -33,9 +34,8 @@ fun Navigation() {
             )
 
         ) {
-            LisOfAlarmsScreen(
-                navController = navController,
-
+            AddEditAlarmScreen(
+                navController = navController
             )
         }
     }

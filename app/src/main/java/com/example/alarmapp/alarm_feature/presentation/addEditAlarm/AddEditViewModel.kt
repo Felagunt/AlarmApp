@@ -15,9 +15,10 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.*
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 @HiltViewModel
-class AddEditViewModel(
+class AddEditViewModel @Inject constructor(
     private val alarmRepository: AlarmRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
