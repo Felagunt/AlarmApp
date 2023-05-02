@@ -11,9 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.alarmapp.alarm_feature.presentation.UiEvent
 import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.AlarmEvent
 import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.ListOfAlarmsViewModel
 import com.example.alarmapp.core.presentation.ScreenRoutes

@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.alarmapp.alarm_feature.domain.model.Alarm
 import com.example.alarmapp.alarm_feature.domain.repository.AlarmRepository
+import com.example.alarmapp.alarm_feature.util.UiEvent
+import com.example.alarmapp.core.presentation.ScreenRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -26,8 +28,9 @@ class ListOfAlarmsViewModel @Inject constructor(
     var state by mutableStateOf(AlarmsState(emptyList()))
         private set
 
-    private val alarmEventChannel = Channel<AlarmEvent>()
-    val alarmEvent = alarmEventChannel.receiveAsFlow()
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
+
 
     private var recentlyDeleted: Alarm? = null
 
@@ -46,30 +49,50 @@ class ListOfAlarmsViewModel @Inject constructor(
         when (event) {
             is AlarmEvent.OnAlarmClick -> {
                 //TODO
-                viewModelScope.launch {
-                    event.alarm.alarmId?.let {
-                        val result = alarmRepository.getAlarmById(it)
-                    }
-                }
+                sendUiEvent(
+                    UiEvent.Navigate(
+                        ScreenRoutes.AddEditAlarmScreen.route + "?alarmId=${event.alarm.alarmId}"
+                    )
+                )
             }
             is AlarmEvent.OnDeleteAlarmClick -> {
                 viewModelScope.launch {
-                    alarmRepository.deleteAlarm(event.alarm)
                     recentlyDeleted = event.alarm
+                    alarmRepository.deleteAlarm(event.alarm)
+                    sendUiEvent(UiEvent.ShowSnackbar(
+                        message = "Alarm deleted",
+                        action = "Undo"
+                    ))
                 }
             }
             is AlarmEvent.OnRestoreAlarmClick -> {
-                viewModelScope.launch {
-                    alarmRepository.insertAlarm(recentlyDeleted ?: return@launch)
-                    recentlyDeleted = null
+                recentlyDeleted?.let {alarm ->
+                    viewModelScope.launch {
+                        alarmRepository.insertAlarm(alarm)
+                        recentlyDeleted = null
+                    }
                 }
             }
             is AlarmEvent.OnEnableClick -> {
-                event.alarm.isEnabled = event.alarm.isEnabled
+                viewModelScope.launch {
+                    alarmRepository.insertAlarm(
+                        event.alarm.copy(
+                            isEnabled = event.isEnabled
+                        )
+                    )
+                    event.alarm.isEnabled = event.alarm.isEnabled
+                }
             }
             is AlarmEvent.OnAddAlarmClick -> {
                 //TODO
+                sendUiEvent(UiEvent.Navigate(ScreenRoutes.AddEditAlarmScreen.route))
             }
+        }
+    }
+
+    private fun sendUiEvent(event: UiEvent) {
+        viewModelScope.launch {
+            _uiEvent.send(event)
         }
     }
 
