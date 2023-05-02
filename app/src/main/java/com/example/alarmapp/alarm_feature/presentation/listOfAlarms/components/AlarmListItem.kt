@@ -52,8 +52,8 @@ fun AlarmListItem(
                 style = MaterialTheme.typography.h4,
                 color = MaterialTheme.colors.secondary
             )
-            Checkbox(checked = false, onCheckedChange ={
-                onEvent(AlarmEvent.OnEnableClick(alarm))
+            Checkbox(checked = alarm.isEnabled, onCheckedChange ={
+                onEvent(AlarmEvent.OnEnableClick(alarm, it))
             })
             IconButton(onClick = {
                 onEvent(AlarmEvent.OnDeleteAlarmClick(alarm))
@@ -71,5 +71,5 @@ fun AlarmListItem(
 @Preview(showBackground = true)
 @Composable
 fun PreviewAlarmListItem() {
-    //AlarmListItem(alarm = Alarm(), onEvent = AlarmEvent.OnEnableClick)
+    //AlarmListItem(alarm = Alarm(emptyList()), onEvent = viewModel::onEvent)
 }
