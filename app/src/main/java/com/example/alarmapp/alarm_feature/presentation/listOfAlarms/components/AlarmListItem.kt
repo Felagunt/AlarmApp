@@ -14,20 +14,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.alarmapp.alarm_feature.domain.model.Alarm
+import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.AlarmEvent
 
 @Composable
 fun AlarmListItem(
     alarm: Alarm,
     modifier: Modifier = Modifier,
-    OnItemClick: (Alarm) -> Unit,
-    OnDeleteAlarmClick: () -> Unit,
-    isEnabled: () -> Unit
+//    OnItemClick: (Alarm) -> Unit,
+//    OnDeleteAlarmClick: () -> Unit,
+//    isEnabled: () -> Unit
+    onEvent: (AlarmEvent) -> Unit
 ) {
     Box(
         modifier = modifier
-            .clickable { OnItemClick(alarm) }
+            //.clickable { OnItemClick(alarm) }
             .clip(RoundedCornerShape(8.dp))
             .border(4.dp, Color.DarkGray)
             .shadow(
@@ -49,8 +52,12 @@ fun AlarmListItem(
                 style = MaterialTheme.typography.h4,
                 color = MaterialTheme.colors.secondary
             )
-            Checkbox(checked = false, onCheckedChange ={ isEnabled()})
-            IconButton(onClick = OnDeleteAlarmClick) {
+            Checkbox(checked = false, onCheckedChange ={
+                onEvent(AlarmEvent.OnEnableClick(alarm))
+            })
+            IconButton(onClick = {
+                onEvent(AlarmEvent.OnDeleteAlarmClick(alarm))
+            }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete alarm",
@@ -59,4 +66,10 @@ fun AlarmListItem(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewAlarmListItem() {
+    //AlarmListItem(alarm = Alarm(), onEvent = AlarmEvent.OnEnableClick)
 }

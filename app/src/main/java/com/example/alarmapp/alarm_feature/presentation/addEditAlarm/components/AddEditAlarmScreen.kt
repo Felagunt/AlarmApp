@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.alarmapp.alarm_feature.presentation.UiEvent
+import com.example.alarmapp.alarm_feature.util.UiEvent
 import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.AddEditEvent
 import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.AddEditViewModel
 import kotlinx.coroutines.flow.collectLatest
