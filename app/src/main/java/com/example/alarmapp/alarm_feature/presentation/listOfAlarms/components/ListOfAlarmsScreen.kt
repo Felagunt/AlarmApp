@@ -1,6 +1,8 @@
 package com.example.alarmapp.alarm_feature.presentation.listOfAlarms.components
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,35 +11,58 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.AlarmEvent
 import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.ListOfAlarmsViewModel
+import com.example.alarmapp.alarm_feature.util.UiEvent
 import com.example.alarmapp.core.presentation.ScreenRoutes
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun LisOfAlarmsScreen(
-    navController: NavController,
+    onNavigate: (UiEvent.Navigate) -> Unit,
     alarmsViewModel: ListOfAlarmsViewModel = hiltViewModel()
 ) {
 
     val state = alarmsViewModel.state
     val scaffoldState = rememberScaffoldState()
-    val scope = rememberCoroutineScope()
     val nextAlarmTime by remember {
         mutableStateOf(
             alarmsViewModel.nextAlarmTime
         )
     }
 
+    LaunchedEffect(key1 = true) {
+        alarmsViewModel.uiEvent.collect{ event ->
+            when(event) {
+                is UiEvent.ShowSnackbar -> {
+                    val result = scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.action
+                    )
+                    if(result == SnackbarResult.ActionPerformed) {
+                        alarmsViewModel.onEvent(AlarmEvent.OnRestoreAlarmClick)
+                    }
+                }
+                is UiEvent.Navigate -> {
+                    onNavigate(event)
+                }
+                else -> Unit
+            }
+        }
+    }
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(ScreenRoutes.AddEditAlarmScreen.route)
+                          alarmsViewModel.onEvent(AlarmEvent.OnAddAlarmClick)
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -54,12 +79,20 @@ fun LisOfAlarmsScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            TopAppBar(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                elevation = 32.dp
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .background(
+                        MaterialTheme.colors.primary,
+                        RectangleShape
+                    )
             ) {
-                Text(text = "Time until wakeup : $nextAlarmTime")
+                Text(
+                    text = "Time until wakeup : $nextAlarmTime",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.body2
+                )
             }
             Spacer(modifier = Modifier.height(8.dp))
             LazyColumn(
@@ -69,30 +102,12 @@ fun LisOfAlarmsScreen(
                 items(state.alarms) { alarm ->
                     AlarmListItem(
                         alarm = alarm,
-                        OnItemClick = {
-                            navController.navigate(
-                                ScreenRoutes.AddEditAlarmScreen.route + "/${alarm.alarmId}"
-                            )
-                        },
-                        isEnabled = {
-                            alarmsViewModel.onEvent(
-                                AlarmEvent.OnEnableClick(alarm)
-                            )
-                        },
-                        OnDeleteAlarmClick = {
-                            alarmsViewModel.onEvent(
-                                AlarmEvent.OnDeleteAlarmClick(alarm)
-                            )
-                            scope.launch {
-                                val result = scaffoldState.snackbarHostState.showSnackbar(
-                                    message = "Alarm deleted",
-                                    actionLabel = "Undo"
-                                )
-                                if (result == SnackbarResult.ActionPerformed) {
-                                    alarmsViewModel.onEvent(AlarmEvent.OnRestoreAlarmClick)
-                                }
+                        onEvent = alarmsViewModel::onEvent,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                alarmsViewModel.onEvent(AlarmEvent.OnAlarmClick(alarm))
                             }
-                        }
                     )
                 }
             }
