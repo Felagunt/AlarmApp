@@ -39,7 +39,8 @@ class ListOfAlarmsViewModel @Inject constructor(
 //            getNearestTime()
 //        )
 //    }
-    var nextAlarmTime by mutableStateOf(getNearestTime())
+    var nextAlarmTime: LocalDateTime by mutableStateOf(LocalDateTime.now())//TODO
+        private set
 
     init {
         getAlarms()
@@ -80,7 +81,6 @@ class ListOfAlarmsViewModel @Inject constructor(
                             isEnabled = event.isEnabled
                         )
                     )
-                    event.alarm.isEnabled = event.alarm.isEnabled
                 }
             }
             is AlarmEvent.OnAddAlarmClick -> {
@@ -96,27 +96,29 @@ class ListOfAlarmsViewModel @Inject constructor(
         }
     }
 
-    fun getNearestTime(): LocalDateTime? {
-
-        val alarm = state.alarms.sortedWith(compareBy { it.ringsTime }).first()
-        val ringsTime = alarm.ringsTime
-        val currentTime = LocalDateTime.now().atZone(ZoneId.systemDefault())
-        val nextAlarm = LocalDateTime.now()
-        val eta = java.time.Duration.between(
-            currentTime.toInstant(),
-            ringsTime.toInstant()
-        ).toMinutes()
-        if (eta > 60) {
-            val hours = eta / 60
-            val minutes = eta % 60
-            nextAlarm.plusHours(eta / 60).plusMinutes(eta % 60)
-            print("$hours:$minutes remaining")
-        } else {
-            nextAlarm.plusMinutes(eta)
-            print("$eta minutes remaining")
+    fun getNearestTime() {
+        viewModelScope.launch {
+            val alarm = state.alarms.sortedWith(compareBy { it.ringsTime }).first()
+            val ringsTime = alarm.ringsTime
+            val currentTime = LocalDateTime.now().atZone(ZoneId.systemDefault())
+            val nextAlarm = LocalDateTime.now()
+            val eta = java.time.Duration.between(
+                currentTime.toInstant(),
+                ringsTime.toInstant()
+            ).toMinutes()
+            if (eta > 60) {
+                val hours = eta / 60
+                val minutes = eta % 60
+                //nextAlarm.plusHours(eta / 60).plusMinutes(eta % 60)
+                nextAlarmTime.plusHours(eta / 60).plusMinutes(eta % 60)
+                //print("$hours:$minutes remaining")
+            } else {
+                nextAlarmTime.plusMinutes(eta)
+                //nextAlarm.plusMinutes(eta)
+                //print("$eta minutes remaining")
+            }
+            //nextAlarmTime = nextAlarm
         }
-
-        return nextAlarm
     }
 
     private fun getAlarms() {

@@ -1,6 +1,5 @@
 package com.example.alarmapp.alarm_feature.presentation.listOfAlarms.components
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,15 +14,10 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.AlarmEvent
 import com.example.alarmapp.alarm_feature.presentation.listOfAlarms.ListOfAlarmsViewModel
 import com.example.alarmapp.alarm_feature.util.UiEvent
-import com.example.alarmapp.core.presentation.ScreenRoutes
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun LisOfAlarmsScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
@@ -32,11 +26,12 @@ fun LisOfAlarmsScreen(
 
     val state = alarmsViewModel.state
     val scaffoldState = rememberScaffoldState()
-    val nextAlarmTime by remember {
+    val nextAlarmTime by remember {//TODO
         mutableStateOf(
             alarmsViewModel.nextAlarmTime
         )
     }
+    //val nat = alarmsViewModel.nextAlarmTime
 
     LaunchedEffect(key1 = true) {
         alarmsViewModel.uiEvent.collect{ event ->
@@ -77,7 +72,7 @@ fun LisOfAlarmsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(paddingValues = it)
         ) {
             Box(
                 modifier = Modifier
@@ -108,6 +103,7 @@ fun LisOfAlarmsScreen(
                             .clickable {
                                 alarmsViewModel.onEvent(AlarmEvent.OnAlarmClick(alarm))
                             }
+                            .padding(16.dp)
                     )
                 }
             }
