@@ -66,6 +66,7 @@ class AddEditViewModel @Inject constructor(
             is AddEditEvent.OnChangeTime -> {
                 state.alarm = state.alarm?.copy(
                     //ringsTime = event.ringTime
+                ringsTime = event.ringTime.atZone(ZoneId.systemDefault())//TODO
                 )
             }
             is AddEditEvent.OnCheckedEnabled -> {
