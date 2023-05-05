@@ -23,10 +23,9 @@ import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterialApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "RememberReturnType")
 @Composable
 fun AddEditAlarmScreen(
-    navController: NavController,
+    onPopBackStack: () -> Unit,
     addEditViewModel: AddEditViewModel = hiltViewModel()
 ) {
     val state = addEditViewModel.state
@@ -55,16 +54,17 @@ fun AddEditAlarmScreen(
         )
     }
     LaunchedEffect(key1 = true) {
-        addEditViewModel.alarmEvent.collectLatest { event ->
+        addEditViewModel.uiEventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message
                     )
                 }
-                is UiEvent.SaveAlarm -> {
-                    //TODO navigate
+                is UiEvent.PopBackStack -> {
+                    onPopBackStack()
                 }
+                else -> Unit
             }
         }
     }
@@ -73,7 +73,7 @@ fun AddEditAlarmScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    addEditViewModel.onEvent(AddEditEvent.SaveAlarm)
+                    addEditViewModel.onEvent(AddEditEvent.OnSaveAlarm)
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -89,7 +89,7 @@ fun AddEditAlarmScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.onSurface)
-                .padding(16.dp)
+                .padding(paddingValues = it)
         ) {
             state.alarm?.let { alarm ->
                 Row(
@@ -139,7 +139,12 @@ fun AddEditAlarmScreen(
                         textLabel = "Vibration: ",
                         checked = alarm.isVibration,
                         onCheckChange = {
-                            addEditViewModel.onEvent(AddEditEvent.OnCheckedEnabled(alarm.isVibration))
+                            addEditViewModel.onEvent(
+                                AddEditEvent.OnCheckedEnabled(
+                                    alarm,
+                                    alarm.isVibration
+                                )
+                            )
                         }
                     )
                 }

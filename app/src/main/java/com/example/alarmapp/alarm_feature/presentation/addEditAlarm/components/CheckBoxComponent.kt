@@ -17,7 +17,6 @@ import com.example.alarmapp.alarm_feature.domain.model.Alarm
 
 @Composable
 fun CheckBoxComponent(
-    alarm: Alarm,
     modifier: Modifier = Modifier,
     textLabel: String,
     checked: Boolean,
