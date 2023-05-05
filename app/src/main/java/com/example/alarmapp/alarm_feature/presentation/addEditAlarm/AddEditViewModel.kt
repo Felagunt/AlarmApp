@@ -27,7 +27,7 @@ class AddEditViewModel @Inject constructor(
         private set
 
     private val _eventFlow = Channel<UiEvent>()
-    val alarmEvent = _eventFlow.receiveAsFlow()
+    val uiEventFlow = _eventFlow.receiveAsFlow()
 
     private var currentAlarmId: Int? = null
 
@@ -47,9 +47,9 @@ class AddEditViewModel @Inject constructor(
     }
 
     fun onEvent(event: AddEditEvent) {
-        when(event) {
+        when (event) {
             is AddEditEvent.OnChangeMelody -> {
-
+                //TODO
             }
             is AddEditEvent.OnChangeHours -> {
                 setTime(
@@ -66,51 +66,60 @@ class AddEditViewModel @Inject constructor(
             is AddEditEvent.OnChangeTime -> {
                 state.alarm = state.alarm?.copy(
                     //ringsTime = event.ringTime
-                ringsTime = event.ringTime.atZone(ZoneId.systemDefault())//TODO
+                    ringsTime = event.ringTime.atZone(ZoneId.systemDefault())//TODO
                 )
             }
             is AddEditEvent.OnCheckedEnabled -> {
+//                state.alarm?.copy(
+//                    isEnabled = event.isEnabled
+//                )
                 state.alarm = state.alarm?.copy(
                     isEnabled = event.isEnabled
                 )
             }
             is AddEditEvent.OnCheckedVibration -> {
+//                state.alarm?.copy(
+//                    isVibration = event.isVibrating
+//                )
                 state.alarm = state.alarm?.copy(
                     isVibration = event.isVibrating
                 )
             }
-            is AddEditEvent.SaveAlarm -> {
-                val currentTime =
-                    LocalDateTime.now().format(
-                        DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
-                    )
+            is AddEditEvent.OnSaveAlarm -> {
                 viewModelScope.launch {
-                    try {
-                        state.alarm?.let {
-                            Alarm(
-                                ringsTime = it.ringsTime,
-                                isVibration = it.isVibration,
-                                isEnabled = it.isEnabled,
-                                ringMelody = it.ringMelody,
-                                alarmId = it.alarmId
+                    if (state.alarm?.ringsTime == ZonedDateTime.now()) {
+                        sendEvent(
+                            UiEvent.ShowSnackbar(
+                                "Choose time"
                             )
-                        }?.let {
-                            alarmRepository.insertAlarm(
-                                it
-                            )
-                        }
-                        _eventFlow.trySend(UiEvent.SaveAlarm)
-                    } catch (e: Exception){
-                     _eventFlow.trySend(
-                         UiEvent.ShowSnackbar(
-                             message = e.message ?: "Error save"
-                         )
-                     )
+                        )
+                        return@launch
                     }
+                    state.alarm.let {
+                        alarmRepository.insertAlarm(
+                            Alarm(
+                                ringsTime = it?.ringsTime ?:
+                                    ZonedDateTime.now().plusMinutes(10),
+                                isVibration = it?.isVibration ?: false,
+                                isEnabled = it?.isEnabled ?: true,
+                                ringMelody = it?.ringMelody ?: "",
+                                alarmId = it?.alarmId
+                            )
+                        )
+                    }
+                    sendEvent(UiEvent.PopBackStack)
                 }
             }
         }
     }
+
+
+    private fun sendEvent(event: UiEvent) {
+        viewModelScope.launch {
+            _eventFlow.send(event)
+        }
+    }
+
     private fun setTime(hours: Int?, minutes: Int?) {
         lateinit var zdt: ZonedDateTime
         val targetLocaltime =
@@ -124,17 +133,14 @@ class AddEditViewModel @Inject constructor(
         val now = ZonedDateTime.now(z)
         val runToday = now.toLocalTime().isBefore(targetLocaltime)
 
-        zdt = if (runToday){
+        zdt = if (runToday) {
             now.with(targetLocaltime)
-        }
-        else{
+        } else {
             now.toLocalDate().plusDays(1).atStartOfDay(z).with(targetLocaltime)
         }
-
         state.alarm = state.alarm?.copy(
             ringsTime = zdt
         )
-
     }
 
 }
