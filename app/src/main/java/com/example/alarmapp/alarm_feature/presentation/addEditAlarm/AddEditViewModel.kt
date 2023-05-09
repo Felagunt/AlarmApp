@@ -50,6 +50,10 @@ class AddEditViewModel @Inject constructor(
         when (event) {
             is AddEditEvent.OnChangeMelody -> {
                 //TODO
+
+                state.alarm = state.alarm?.copy(
+                    ringMelody = event.ringMelody
+                )
             }
             is AddEditEvent.OnChangeHours -> {
                 setTime(
@@ -71,6 +75,9 @@ class AddEditViewModel @Inject constructor(
             }
             is AddEditEvent.OnCheckedEnabled -> {
 //                state.alarm?.copy(
+//                    isEnabled = event.isEnabled
+//                )
+//                state.alarm = event.alarm.copy(
 //                    isEnabled = event.isEnabled
 //                )
                 state.alarm = state.alarm?.copy(
