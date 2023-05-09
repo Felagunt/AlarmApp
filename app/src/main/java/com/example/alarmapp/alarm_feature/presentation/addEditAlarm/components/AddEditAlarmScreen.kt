@@ -100,8 +100,8 @@ fun AddEditAlarmScreen(
                 ) {
                     Column(modifier = Modifier) {
                         CounterComponent(count = hours, style = MaterialTheme.typography.h3)
-                        Button(onClick ={
-                            hours ++
+                        Button(onClick = {
+                            hours++
                             addEditViewModel.onEvent(
                                 AddEditEvent.OnChangeHours(
                                     hours = hours
@@ -135,7 +135,7 @@ fun AddEditAlarmScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     CheckBoxComponent(
-                        alarm = alarm,
+                        //alarm = alarm,
                         textLabel = "Vibration: ",
                         checked = alarm.isVibration,
                         onCheckChange = {
@@ -173,7 +173,12 @@ fun AddEditAlarmScreen(
                         Checkbox(
                             checked = alarm.isEnabled,
                             onCheckedChange = {
-                                addEditViewModel.onEvent(AddEditEvent.OnCheckedEnabled(alarm.isEnabled))
+                                addEditViewModel.onEvent(
+                                    AddEditEvent.OnCheckedEnabled(
+                                        alarm,
+                                        alarm.isEnabled
+                                    )
+                                )
                             }
                         )
                     }
@@ -201,6 +206,12 @@ fun AddEditAlarmScreen(
                             style = MaterialTheme.typography.h4
                         )
                         DropDownMenuComponent(melodyDropDownMenuPar)//listof melodies
+                        addEditViewModel.onEvent(
+                            AddEditEvent.OnChangeMelody(
+                                alarm,
+                                melodyDropDownMenuPar.selectedOptionText
+                            )
+                        )
                     }
                 }
             }
