@@ -20,10 +20,14 @@ fun Navigation() {
         startDestination = ScreenRoutes.ListOfAlarmsScreen.route
     ) {
         composable(ScreenRoutes.ListOfAlarmsScreen.route) {
-            LisOfAlarmsScreen(navController = navController)
+            LisOfAlarmsScreen(
+                onNavigate = {
+                    navController.navigate(it.route)
+                }
+            )
         }
         composable(
-            route = ScreenRoutes.AddEditAlarmScreen.route + "/{alarmId}",
+            route = ScreenRoutes.AddEditAlarmScreen.route + "?alarmId={alarmId}",
             arguments = listOf(
                 navArgument(
                     name = "alarmId"
@@ -35,7 +39,9 @@ fun Navigation() {
 
         ) {
             AddEditAlarmScreen(
-                navController = navController
+                onPopBackStack = {
+                    navController.popBackStack()
+                }
             )
         }
     }
