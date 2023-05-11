@@ -13,7 +13,8 @@ import com.example.alarmapp.alarmManager_feature.presetation.finale.FinaleViewMo
 
 @Composable
 fun FinaleScreen(
-    viewModel: FinaleViewModel = hiltViewModel()
+    viewModel: FinaleViewModel = hiltViewModel(),
+    onPopBackStack: () -> Unit
 ) {
 
     val state by viewModel.currentTime.collectAsState()

@@ -12,11 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.alarmapp.alarmManager_feature.data.AndroidAlarmScheduler
+import com.example.alarmapp.alarm_feature.util.UiEvent
 import java.time.LocalDateTime
 
 @Composable
 fun FireAlarmsScreen(
-    context: Context
+    context: Context,
+    onNavigate: (UiEvent.Navigate) -> Unit
 ) {
     val scheduler = AndroidAlarmScheduler(context = context )
     var alarmItem: AlarmItem? = null
@@ -38,7 +40,7 @@ fun FireAlarmsScreen(
             horizontalArrangement = Arrangement.Center
         ) {
             Button(onClick = {
-                alarmItem?.let(scheduler::cancel)
+                //alarmItem?.let(scheduler::cancel)
             }) {
                 Text(text = "Cancel")
             }
@@ -47,7 +49,7 @@ fun FireAlarmsScreen(
                     time = LocalDateTime.now().plusMinutes(5),
                     message = message
                 )
-                alarmItem?.let(scheduler::scheduler)
+                //alarmItem?.let(scheduler::scheduler)
                 secondsText = ""
                 message = ""
             }) {

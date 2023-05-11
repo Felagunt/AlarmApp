@@ -10,6 +10,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
 import com.example.alarmapp.core.presentation.Navigation
 import com.example.alarmapp.ui.theme.AlarmAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +23,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             AlarmAppTheme {
                 Navigation()
+
+                }
             }
         }
     }
-}
+
