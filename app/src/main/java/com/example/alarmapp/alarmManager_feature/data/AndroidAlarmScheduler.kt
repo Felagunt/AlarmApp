@@ -20,12 +20,32 @@ class AndroidAlarmScheduler(
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     @SuppressLint("MissingPermission")
-    override fun scheduler(item: Alarm) {
-//        val int = Intent(context, MainActivity::class.java).apply {
-//            putExtra("alarmId", item.alarmId)
-//        }
+   override fun scheduler(item: Alarm) {
+
+        /*//TODO setalarm andgoodtogo
+        val int = Intent(
+            context,
+            MainActivity::class.java
+        ).apply {
+            putExtra("alarmId", item.alarmId)
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            int,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            item.ringsTime.toEpochSecond() * 1000,
+            pendingIntent
+        )*/
+
+
+
         val intent = Intent(context, AlarmReceiver::class.java).apply {
-            putExtra("Extra_message", item.ringMelody)//data send to
+            putExtra("alarmId", item.alarmId)//data send to
         }
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,

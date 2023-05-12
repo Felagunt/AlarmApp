@@ -2,13 +2,10 @@ package com.example.alarmapp.core.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavType
-import androidx.navigation.Navigation
-import androidx.navigation.activity
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.alarmapp.MainActivity
 import com.example.alarmapp.alarmManager_feature.presetation.FinaleScreen
 import com.example.alarmapp.alarmManager_feature.presetation.fires_alarms.FireAlarmsScreen
@@ -49,8 +46,25 @@ fun Navigation() {
                 }
             )
         }
-        composable(route = ScreenRoutes.FireAlarmsScreen.route + "?") {
+        composable(
+            route = ScreenRoutes.FireAlarmsScreen.route,
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = ScreenRoutes.FireAlarmsScreen.route + "?alarmId={alarmId}"
+                }
+            ),
+            arguments = listOf(
+                navArgument(
+                    name = "alarmId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                }
+            )
+            ) {
             val context = LocalContext.current
+            //val alarmId = it.arguments?.getInt("alarmId", -1)
+            val al =
             FireAlarmsScreen(
                 context = context,
                 onNavigate = {
@@ -63,7 +77,7 @@ fun Navigation() {
         composable(route = ScreenRoutes.FinaleScreen.route) {
             FinaleScreen(
                 onPopBackStack = {
-                    if(navController.popBackStack()) {
+                    if (navController.popBackStack()) {
                         MainActivity::finish
                     }
                 }
@@ -71,14 +85,35 @@ fun Navigation() {
         }
     }
 }
-//
-composable(
-"details?article={argument}",
-deepLinks = listOf(navDeepLink {
-    uriPattern = "https://composables.co/blog/{argument}"
-}),
-) { backStackEntry ->
-    val article = backStackEntry.arguments?.getString("argument")
-    Text("Showing /$article")
-}
-}
+////
+//composable(
+//"details?article={argument}",
+//deepLinks = listOf(navDeepLink {
+//    uriPattern = "https://composables.co/blog/{argument}"
+//}),
+//) {
+//    backStackEntry ->
+//    val article = backStackEntry.arguments?.getString("argument")
+//    Text("Showing /$article")
+//}
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

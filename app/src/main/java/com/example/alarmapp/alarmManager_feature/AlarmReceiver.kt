@@ -1,5 +1,6 @@
 package com.example.alarmapp.alarmManager_feature
 
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -17,14 +18,15 @@ class AlarmReceiver: BroadcastReceiver() {
     lateinit var repository: AlarmRepository//here we'll use user fields as a repos etc
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        val message = intent?.getStringExtra("Extra_message") ?: return
-        val alarmId = intent.getStringExtra("alarmId")
+        //val message = intent?.getStringExtra("Extra_message") ?: return
+        val alarmId = intent?.getStringExtra("alarmId")
         //intent.setComponent(MainActivity::class.java)
-        intent.toUri(0)
-        println("Alarm triggered: $message")
+        //intent.toUri(ScreenRoutes.FireAlarmsScreen.route + "/alarmId")
+        //println("Alarm triggered: $message")
         //UiEvent.Navigate()
-            UiEvent.Navigate(
-                ScreenRoutes.FireAlarmsScreen.route + "/alarmId"
-            )
+//            UiEvent.Navigate(
+//                ScreenRoutes.FireAlarmsScreen.route + "/alarmId"
+//            )
+
     }
 }
