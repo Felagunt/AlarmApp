@@ -52,4 +52,8 @@ class AlarmRepositoryImpl @Inject constructor(
     override suspend fun getMelodyByName(name: String): Melody? {
         return melodyDao.getMelodyByName(name)?.toMelody()
     }
+
+    override suspend fun getMelodyWithAlarms(): List<Melody> {
+        return melodyDao.getMelodiesWithAlarms().map { it.toMelody() }
+    }
 }

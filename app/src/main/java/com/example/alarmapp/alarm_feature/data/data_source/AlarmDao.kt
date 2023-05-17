@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.alarmapp.alarm_feature.data.entity.AlarmEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AlarmDao {

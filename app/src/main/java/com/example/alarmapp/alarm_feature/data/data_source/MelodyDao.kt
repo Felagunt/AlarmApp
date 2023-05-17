@@ -2,6 +2,7 @@ package com.example.alarmapp.alarm_feature.data.data_source
 
 import androidx.room.*
 import com.example.alarmapp.alarm_feature.data.entity.MelodyEntity
+import com.example.alarmapp.alarm_feature.data.entity.MelodyWithAlarms
 
 @Dao
 interface MelodyDao {
@@ -20,4 +21,8 @@ interface MelodyDao {
 
     @Delete
     suspend fun deleteMelody(alarmEntity: MelodyEntity)
+
+    @Transaction
+    @Query("SELECT * FROM melodyentity")
+    suspend fun getMelodiesWithAlarms(): List<MelodyWithAlarms>
 }
