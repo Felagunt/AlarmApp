@@ -29,6 +29,6 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAlarmRepository(db: AlarmDatabase): AlarmRepository {
-        return AlarmRepositoryImpl(db.alarmDao)
+        return AlarmRepositoryImpl(db.alarmDao, db.melodyDao)
     }
 }

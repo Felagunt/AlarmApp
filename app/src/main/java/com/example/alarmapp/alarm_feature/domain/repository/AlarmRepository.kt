@@ -1,6 +1,7 @@
 package com.example.alarmapp.alarm_feature.domain.repository
 
 import com.example.alarmapp.alarm_feature.domain.model.Alarm
+import com.example.alarmapp.alarm_feature.domain.model.Melody
 
 interface AlarmRepository {
 
@@ -11,4 +12,12 @@ interface AlarmRepository {
     suspend fun insertAlarm(alarm: Alarm)
 
     suspend fun deleteAlarm(alarm: Alarm)
+
+    suspend fun getMelodyById(id: Int): Melody?
+
+    suspend fun insertMelody(melody: Melody)
+
+    suspend fun deleteMelody(melody: Melody)
+
+    fun getMelodies(): List<Melody>
 }
