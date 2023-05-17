@@ -20,4 +20,6 @@ interface AlarmRepository {
     suspend fun deleteMelody(melody: Melody)
 
     fun getMelodies(): List<Melody>
+
+    suspend fun getMelodyByName(name: String): Melody?
 }
