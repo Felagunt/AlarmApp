@@ -21,7 +21,9 @@ interface AlarmRepository {
 
     fun getMelodies(): List<Melody>
 
-    suspend fun getMelodyByName(name: String): Melody?
+    suspend fun getMelodyNameById(id: Int): String
 
     suspend fun getMelodyWithAlarms(): List<Melody>
+
+
 }

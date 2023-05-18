@@ -5,7 +5,7 @@ import com.example.alarmapp.alarm_feature.domain.model.Melody
 
 fun Melody.toMelodyEntity(): MelodyEntity {
     return MelodyEntity(
-        ringMelody = ringMelody,
+        melodyName = melodyName,
         melodyPath = melodyPath,
         melodyId = melodyId
     )

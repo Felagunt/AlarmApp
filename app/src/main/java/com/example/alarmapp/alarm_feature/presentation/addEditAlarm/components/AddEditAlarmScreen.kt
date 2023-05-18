@@ -1,6 +1,5 @@
 package com.example.alarmapp.alarm_feature.presentation.addEditAlarm.components
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -15,7 +14,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.alarmapp.alarm_feature.util.UiEvent
 import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.AddEditEvent
 import com.example.alarmapp.alarm_feature.presentation.addEditAlarm.AddEditViewModel
@@ -42,7 +40,7 @@ fun AddEditAlarmScreen(
     val melodyOptions = listOf("opt1", "opt2", "opt3")
     val categoryExpanded by remember { mutableStateOf(false) }
     val categorySelectedOptionText
-            by remember { mutableStateOf(state.alarm!!.ringMelody) }
+            by remember { mutableStateOf(state.alarm!!.melodyId) }
     val melodyDropDownMenuPar by remember {
         mutableStateOf(
             DropDownMenuParameter(

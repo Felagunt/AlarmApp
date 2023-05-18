@@ -2,6 +2,7 @@ package com.example.alarmapp.alarm_feature.data.repository
 
 import com.example.alarmapp.alarm_feature.data.data_source.AlarmDao
 import com.example.alarmapp.alarm_feature.data.data_source.MelodyDao
+import com.example.alarmapp.alarm_feature.data.entity.AlarmMelodyCrossRef
 import com.example.alarmapp.alarm_feature.data.mapper.toAlarm
 import com.example.alarmapp.alarm_feature.data.mapper.toAlarmEntity
 import com.example.alarmapp.alarm_feature.data.mapper.toMelody
@@ -9,7 +10,6 @@ import com.example.alarmapp.alarm_feature.data.mapper.toMelodyEntity
 import com.example.alarmapp.alarm_feature.domain.model.Alarm
 import com.example.alarmapp.alarm_feature.domain.model.Melody
 import com.example.alarmapp.alarm_feature.domain.repository.AlarmRepository
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class AlarmRepositoryImpl @Inject constructor(
@@ -27,6 +27,12 @@ class AlarmRepositoryImpl @Inject constructor(
 
     override suspend fun insertAlarm(alarm: Alarm) {
         alarmDao.insertAlarm(alarm.toAlarmEntity())
+        val alarmMelody =
+                AlarmMelodyCrossRef(
+                    alarmId = alarm.alarmId ,
+                    melodyId = alarm.melodyId
+                )
+        alarmDao.insertAlarmMelody(alarmMelody)
     }
 
     override suspend fun deleteAlarm(alarm: Alarm) {
@@ -49,8 +55,8 @@ class AlarmRepositoryImpl @Inject constructor(
         return melodyDao.getMelodies().map { it.toMelody() }
     }
 
-    override suspend fun getMelodyByName(name: String): Melody? {
-        return melodyDao.getMelodyByName(name)?.toMelody()
+    override suspend fun getMelodyNameById(id: Int): String {
+        return melodyDao.getMelodyNameById(id)
     }
 
     override suspend fun getMelodyWithAlarms(): List<Melody> {

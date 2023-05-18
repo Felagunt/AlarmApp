@@ -14,7 +14,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.*
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,7 +51,7 @@ class AddEditViewModel @Inject constructor(
                 //TODO
 
                 state.alarm = state.alarm?.copy(
-                    ringMelody = event.ringMelody
+                    melodyId = event.melodyId
                 )
             }
             is AddEditEvent.OnChangeHours -> {
@@ -109,7 +108,7 @@ class AddEditViewModel @Inject constructor(
                                     ZonedDateTime.now().plusMinutes(10),
                                 isVibration = it?.isVibration ?: false,
                                 isEnabled = it?.isEnabled ?: true,
-                                ringMelody = it?.ringMelody ?: "",
+                                melodyId = it?.melodyId,
                                 alarmId = it?.alarmId
                             )
                         )

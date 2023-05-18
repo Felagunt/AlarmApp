@@ -13,8 +13,8 @@ interface MelodyDao {
     @Query("SELECT * FROM melodyentity WHERE melodyId = :id")
     suspend fun getMelodyById(id: Int): MelodyEntity?
 
-    @Query("Select * FROM melodyentity WHERE ringMelody = :name")
-    suspend fun getMelodyByName(name: String): MelodyEntity?
+    @Query("Select melodyName FROM melodyentity WHERE melodyId = :id")
+    suspend fun getMelodyNameById(id: Int): String
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMelody(melodyEntity: MelodyEntity)

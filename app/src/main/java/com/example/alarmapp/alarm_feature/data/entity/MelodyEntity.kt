@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class MelodyEntity(
     @PrimaryKey val melodyId: Int,
     //val alarmId: Int? = null,
-    val ringMelody: String? = "",
+    val melodyName: String? = "",
     val melodyPath: String? = ""
 )

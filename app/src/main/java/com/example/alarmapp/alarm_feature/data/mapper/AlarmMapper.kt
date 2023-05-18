@@ -11,7 +11,7 @@ fun AlarmEntity.toAlarm(): Alarm {
         ringsTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(ringsTime), ZoneId.systemDefault()),
         alarmId = alarmId,
         isVibration = isVibration,
-        ringMelody = ringMelody,
+        melodyId = melodyId,
         isEnabled = isEnabled
     )
 }

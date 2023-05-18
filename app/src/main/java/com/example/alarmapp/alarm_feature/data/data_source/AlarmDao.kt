@@ -1,11 +1,9 @@
 package com.example.alarmapp.alarm_feature.data.data_source
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.alarmapp.alarm_feature.data.entity.AlarmEntity
+import com.example.alarmapp.alarm_feature.data.entity.AlarmMelodyCrossRef
+import com.example.alarmapp.alarm_feature.data.entity.MelodyWithAlarms
 
 @Dao
 interface AlarmDao {
@@ -19,6 +17,15 @@ interface AlarmDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAlarm(alarmEntity: AlarmEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAlarmMelody(alarmMelodyCrossRef: AlarmMelodyCrossRef
+        //orderProductEntities: List<OrderProductEntity>
+        )
+
     @Delete
     suspend fun deleteAlarm(alarmEntity: AlarmEntity)
+
+    @Transaction
+    @Query("SELECT * FROM alarmentity")
+    fun getAlarmsWithMelody(): List<MelodyWithAlarms>
 }
