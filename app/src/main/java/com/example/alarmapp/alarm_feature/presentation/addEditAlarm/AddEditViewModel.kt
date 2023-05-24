@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.alarmapp.alarm_feature.domain.model.Alarm
+import com.example.alarmapp.alarm_feature.domain.model.Melody
 import com.example.alarmapp.alarm_feature.domain.repository.AlarmRepository
 import com.example.alarmapp.alarm_feature.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +26,8 @@ class AddEditViewModel @Inject constructor(
     var state by mutableStateOf(AddEditAlarmState())
         private set
 
+    var melodies by mutableStateOf<List<Melody>>(emptyList())
+
     private val _eventFlow = Channel<UiEvent>()
     val uiEventFlow = _eventFlow.receiveAsFlow()
 
@@ -42,6 +45,7 @@ class AddEditViewModel @Inject constructor(
                     }
                 }
             }
+            getMelodies()
         }
     }
 
@@ -51,7 +55,7 @@ class AddEditViewModel @Inject constructor(
                 //TODO
 
                 state.alarm = state.alarm?.copy(
-                    melodyId = event.melodyId
+                    melody = event.alarm.melody
                 )
             }
             is AddEditEvent.OnChangeHours -> {
@@ -108,7 +112,7 @@ class AddEditViewModel @Inject constructor(
                                     ZonedDateTime.now().plusMinutes(10),
                                 isVibration = it?.isVibration ?: false,
                                 isEnabled = it?.isEnabled ?: true,
-                                melodyId = it?.melodyId,
+                                melody = it?.melody,
                                 alarmId = it?.alarmId
                             )
                         )
@@ -116,6 +120,12 @@ class AddEditViewModel @Inject constructor(
                     sendEvent(UiEvent.PopBackStack)
                 }
             }
+        }
+    }
+
+    private fun getMelodies() {
+        viewModelScope.launch {
+            melodies = alarmRepository.getMelodies()
         }
     }
 

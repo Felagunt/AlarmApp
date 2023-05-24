@@ -2,7 +2,8 @@ package com.example.alarmapp.alarm_feature.data.repository
 
 import com.example.alarmapp.alarm_feature.data.data_source.AlarmDao
 import com.example.alarmapp.alarm_feature.data.data_source.MelodyDao
-import com.example.alarmapp.alarm_feature.data.entity.AlarmMelodyCrossRef
+import com.example.alarmapp.alarm_feature.data.entity.AlarmMelodyEntity
+import com.example.alarmapp.alarm_feature.data.entity.AlarmsWithMelody
 import com.example.alarmapp.alarm_feature.data.mapper.toAlarm
 import com.example.alarmapp.alarm_feature.data.mapper.toAlarmEntity
 import com.example.alarmapp.alarm_feature.data.mapper.toMelody
@@ -17,20 +18,40 @@ class AlarmRepositoryImpl @Inject constructor(
     private val melodyDao: MelodyDao
 ): AlarmRepository{
 
-    override fun getAlarms(): List<Alarm> {
-        return alarmDao.getAlarms().map { it.toAlarm() }
+//    override suspend fun getDeliverers(): List<Deliverer> {
+//        return delivererDao.getDeliverers().map {
+//            it.delivererEntity.toDeliverer(
+//                it.products.map { productEntity ->
+//                    productEntity.toProduct()
+//                }
+//            )
+//        }
+    override suspend fun getAlarms(): List<Alarm> {
+
+        return alarmDao.getAlarms().map {
+            it.toAlarm(
+                melodyDao.getMelodyById(it.melodyId)!!.toMelody()
+            )
+        }
+    }
+
+    override suspend fun getAlarmsWithMelody(): List<AlarmsWithMelody> {
+        return alarmDao.getAlarmsWithMelody()
     }
 
     override suspend fun getAlarmById(id: Int): Alarm? {
-        return alarmDao.getAlarmById(id)?.toAlarm()
+        return alarmDao.getAlarmById(id).let {alarmEntity ->
+            val melodyId = melodyDao.getMelodyById(alarmEntity!!.melodyId)
+            alarmEntity.toAlarm(melodyId!!.toMelody())//TODO WTF
+        }
     }
 
     override suspend fun insertAlarm(alarm: Alarm) {
         alarmDao.insertAlarm(alarm.toAlarmEntity())
         val alarmMelody =
-                AlarmMelodyCrossRef(
+                AlarmMelodyEntity(
                     alarmId = alarm.alarmId ,
-                    melodyId = alarm.melodyId
+                    melodyId = alarm.melody!!.melodyId
                 )
         alarmDao.insertAlarmMelody(alarmMelody)
     }

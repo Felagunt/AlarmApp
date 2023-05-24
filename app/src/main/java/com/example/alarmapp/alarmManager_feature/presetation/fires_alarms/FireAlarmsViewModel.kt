@@ -10,6 +10,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.alarmapp.alarmManager_feature.data.AndroidAlarmScheduler
+import com.example.alarmapp.alarm_feature.data.mapper.toAlarm
 import com.example.alarmapp.alarm_feature.domain.model.Alarm
 import com.example.alarmapp.alarm_feature.domain.repository.AlarmRepository
 import com.example.alarmapp.alarm_feature.util.UiEvent
@@ -35,13 +36,14 @@ class FireAlarmsViewModel @Inject constructor(
 
 
 
+
     private val _eventFlow = Channel<UiEvent>()
     val uiEventFlow = _eventFlow.receiveAsFlow()
     init {
         savedStateHandle.get<Int>("alarmId")?.let { alarmId ->
             if (alarmId != -1) {
                 viewModelScope.launch {
-                    fireAlarm = alarmRepository.getAlarmById(alarmId)!!
+                    fireAlarm = alarmRepository.getAlarmById(alarmId)
                 }
             }
         }

@@ -28,6 +28,8 @@ fun AddEditAlarmScreen(
 ) {
     val state = addEditViewModel.state
 
+    val melodies = addEditViewModel.melodies
+
     var hours by remember {
         mutableStateOf(LocalDateTime.now().hour)
     }
@@ -37,16 +39,16 @@ fun AddEditAlarmScreen(
 
     val scaffoldState = rememberScaffoldState()
 
-    val melodyOptions = listOf("opt1", "opt2", "opt3")
+    val melodyOptions = melodies
     val categoryExpanded by remember { mutableStateOf(false) }
     val categorySelectedOptionText
-            by remember { mutableStateOf(state.alarm!!.melodyId) }
+            by remember { mutableStateOf(state.alarm!!.melody) }
     val melodyDropDownMenuPar by remember {
         mutableStateOf(
             DropDownMenuParameter(
                 options = melodyOptions,
                 expanded = categoryExpanded,
-                selectedOptionText = categorySelectedOptionText,
+                selectedOptionText = categorySelectedOptionText!!.melodyName,
                 backgroundColor = Color.LightGray
             )
         )
@@ -206,8 +208,7 @@ fun AddEditAlarmScreen(
                         DropDownMenuComponent(melodyDropDownMenuPar)//listof melodies
                         addEditViewModel.onEvent(
                             AddEditEvent.OnChangeMelody(
-                                alarm,
-                                melodyDropDownMenuPar.selectedOptionText
+                                alarm
                             )
                         )
                     }

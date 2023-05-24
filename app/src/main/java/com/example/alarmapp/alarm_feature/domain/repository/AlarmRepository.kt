@@ -1,11 +1,12 @@
 package com.example.alarmapp.alarm_feature.domain.repository
 
+import com.example.alarmapp.alarm_feature.data.entity.AlarmsWithMelody
 import com.example.alarmapp.alarm_feature.domain.model.Alarm
 import com.example.alarmapp.alarm_feature.domain.model.Melody
 
 interface AlarmRepository {
 
-    fun getAlarms(): List<Alarm>
+    suspend fun getAlarms(): List<Alarm>
 
     suspend fun getAlarmById(id: Int): Alarm?
 
@@ -24,6 +25,8 @@ interface AlarmRepository {
     suspend fun getMelodyNameById(id: Int): String
 
     suspend fun getMelodyWithAlarms(): List<Melody>
+
+    suspend fun getAlarmsWithMelody(): List<AlarmsWithMelody>
 
 
 }

@@ -54,13 +54,13 @@ fun DropDownMenuComponent(params: DropDownMenuParameter) {
                     modifier = Modifier
                         .background(params.backgroundColor),
                     onClick = {
-                        params.selectedOptionText = selectionOption
+                        params.selectedOptionText = selectionOption.melodyName
                         expanded = false
                     },
 
                     ) {
                     Text(
-                        text = selectionOption,
+                        text = selectionOption.melodyName,
                         color = Color.White,
                     )
 

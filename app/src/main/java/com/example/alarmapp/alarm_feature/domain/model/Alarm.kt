@@ -6,6 +6,6 @@ data class Alarm(
     val alarmId: Int? = null,
     val ringsTime: ZonedDateTime,
     val isVibration: Boolean = false,
-    val melodyId: Int? = null,
+    val melody: Melody? = null,
     var isEnabled: Boolean = true
 )
